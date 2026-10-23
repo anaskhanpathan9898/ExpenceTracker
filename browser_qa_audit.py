@@ -35,7 +35,10 @@ def record_test(name, passed, detail=""):
 
 def run_browser_audit():
     with sync_playwright() as p:
-        browser = p.chromium.launch(channel="chrome", headless=True)
+        try:
+            browser = p.chromium.launch(channel="msedge", headless=True)
+        except Exception:
+            browser = p.chromium.launch(channel="chrome", headless=True)
         context = browser.new_context(viewport={"width": 1366, "height": 768})
         page = context.new_page()
 
@@ -45,7 +48,7 @@ def run_browser_audit():
 
         print("\n=== STEP 1: Registration Page Visual & Form Audit ===")
         page.goto(f"{BASE_URL}/register")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
         page.screenshot(path=os.path.join(SCREENSHOT_DIR, "01_register_desktop.png"))
         record_test("Register page loads with 200/OK", "Create Account" in page.content())
 
@@ -74,7 +77,7 @@ def run_browser_audit():
 
         # Reload page and verify theme persisted in localStorage
         page.reload()
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
         persisted_theme = page.evaluate("() => document.documentElement.getAttribute('data-theme')")
         record_test("Theme persistence maintained across page reload", persisted_theme == "dark")
 
@@ -86,7 +89,7 @@ def run_browser_audit():
 
         print("\n=== STEP 3: Login Page Visual & Auth Audit ===")
         page.goto(f"{BASE_URL}/login")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
         page.screenshot(path=os.path.join(SCREENSHOT_DIR, "03_login_desktop.png"))
         record_test("Login page loads cleanly", "Welcome Back" in page.content())
 
@@ -94,7 +97,7 @@ def run_browser_audit():
         page.fill("#email", "test@auto.dev")
         page.fill("#password", "AutoTest@123")
         page.click("button[type='submit']")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
 
         record_test("Login redirects to /dashboard", "/dashboard" in page.url)
         page.screenshot(path=os.path.join(SCREENSHOT_DIR, "04_dashboard_desktop.png"))
@@ -163,7 +166,7 @@ def run_browser_audit():
 
         print("\n=== STEP 6: Transactions List & Add/Edit Forms Audit ===")
         page.goto(f"{BASE_URL}/transactions/add")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
         page.screenshot(path=os.path.join(SCREENSHOT_DIR, "08_add_transaction_form.png"))
         record_test("Add Transaction page rendered with category dropdown", page.locator("#category").is_visible())
 
@@ -174,7 +177,7 @@ def run_browser_audit():
         page.fill("#description", "Fintech UI Redesign Test")
         page.fill("#date", "2026-10-31")
         page.click("button[type='submit']")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
 
         record_test("Adding transaction via browser submits and redirects to list", "/transactions" in page.url)
         page.screenshot(path=os.path.join(SCREENSHOT_DIR, "09_transactions_list_desktop.png"))
@@ -186,20 +189,20 @@ def run_browser_audit():
         # Test filter interaction in UI
         page.fill("input[name='search']", "Fintech")
         page.click("button:has-text('Filter')")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
         filtered_vis = page.locator("text='Fintech UI Redesign Test'").first.is_visible()
         record_test("Search filter button works and shows filtered rows", filtered_vis)
 
         print("\n=== STEP 7: Budget Page & Progress Bar Audit ===")
         page.goto(f"{BASE_URL}/budget/?month=2026-10")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
         page.screenshot(path=os.path.join(SCREENSHOT_DIR, "10_budget_page_desktop.png"))
 
         # Test adding a budget limit for Shopping
         page.select_option("#category", "Shopping")
         page.fill("#limit_amount", "3000")
         page.click("button:has-text('Save Budget')")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
 
         # Verify progress bar rendered
         budget_card = page.locator(".budget-item:has-text('Shopping')")

@@ -47,8 +47,9 @@ def create_app():
     # -----------------------------------------------------------------------
     # MongoDB connection — stored on app so routes can reach it via
     # current_app.db
+    # serverSelectionTimeoutMS=5000 prevents long gateway timeouts in serverless
     # -----------------------------------------------------------------------
-    client = MongoClient(app.config["MONGO_URI"])
+    client = MongoClient(app.config["MONGO_URI"], serverSelectionTimeoutMS=5000)
     app.db = client[app.config["MONGO_DBNAME"]]
 
     # -----------------------------------------------------------------------
