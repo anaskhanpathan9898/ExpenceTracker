@@ -1,0 +1,310 @@
+/* ==========================================================================
+   dashboard.css — Modern Fintech Dashboard & Soft Neumorphism
+   ========================================================================== */
+
+.dashboard-container {
+  width: 100%;
+}
+
+.month-badge {
+  background: var(--clr-surface);
+  color: var(--clr-primary);
+  border: 1px solid var(--clr-border);
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ---------- Summary Metric Cards (Soft Neumorphic Fintech) ---------- */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.25rem;
+}
+
+.card {
+  background: var(--clr-surface);
+  border-radius: var(--radius-md);
+  padding: 1.65rem 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  border: 1px solid var(--clr-border);
+  box-shadow: var(--shadow-neu-flat);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--clr-primary);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-income::before {
+  background: var(--clr-income);
+}
+.card-expense::before {
+  background: var(--clr-expense);
+}
+.card-balance::before {
+  background: var(--clr-primary);
+}
+.card-negative::before {
+  background: var(--clr-expense);
+}
+.card-negative .card-value {
+  color: var(--clr-expense);
+}
+
+.card-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  background: var(--clr-surface-subtle);
+  border: 1px solid var(--clr-border);
+  box-shadow: var(--shadow-neu-pressed);
+  flex-shrink: 0;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.card-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--clr-text-secondary);
+}
+
+.card-value {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--clr-text);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Charts Section ---------- */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.25rem;
+}
+
+.chart-card {
+  background: var(--clr-surface);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  border: 1px solid var(--clr-border);
+  box-shadow: var(--shadow-neu-flat);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.chart-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 270px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ---------- Recent Transactions Section ---------- */
+.recent-section {
+  background: var(--clr-surface);
+  border-radius: var(--radius-md);
+  padding: 1.75rem 2rem;
+  border: 1px solid var(--clr-border);
+  box-shadow: var(--shadow-neu-flat);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.section-header h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--clr-text);
+}
+
+/* ---------- Budget Page Styles ---------- */
+.page-container {
+  width: 100%;
+}
+
+.budget-form-card {
+  margin-bottom: 2.25rem;
+}
+.budget-form-card h3 {
+  margin-bottom: 1.25rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--clr-text);
+}
+
+.form-row {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 180px;
+  margin-bottom: 0;
+}
+.form-group-action label {
+  visibility: hidden;
+}
+
+.month-picker {
+  padding: 0.6rem 1rem;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.925rem;
+  font-weight: 600;
+  background: var(--clr-surface);
+  color: var(--clr-text);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+.month-picker:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px var(--clr-primary-glow);
+}
+
+/* Budget Progress Cards */
+.budget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.budget-item {
+  background: var(--clr-surface);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--clr-border);
+  box-shadow: var(--shadow-neu-flat);
+  border-left: 5px solid var(--clr-income);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.budget-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.budget-item.budget-warning {
+  border-left-color: var(--clr-warning);
+}
+.budget-item.budget-danger {
+  border-left-color: var(--clr-expense);
+}
+
+.budget-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.budget-category {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--clr-text);
+}
+.budget-amounts {
+  color: var(--clr-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-bar-wrap {
+  background: var(--clr-border-subtle);
+  border-radius: var(--radius-pill);
+  height: 12px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-neu-pressed);
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-good {
+  background: linear-gradient(90deg, #10B981, #34D399);
+}
+.progress-warning {
+  background: linear-gradient(90deg, #F59E0B, #FBBF24);
+}
+.progress-danger {
+  background: linear-gradient(90deg, #EF4444, #F87171);
+}
+
+.budget-status-msg {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--clr-text-secondary);
+}
+.budget-danger .budget-status-msg {
+  color: var(--clr-expense);
+}
+.budget-warning .budget-status-msg {
+  color: var(--clr-warning);
+}

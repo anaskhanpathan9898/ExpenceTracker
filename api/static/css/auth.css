@@ -1,0 +1,61 @@
+/* ==========================================================================
+   auth.css — Modern Fintech Centered Auth Cards
+   ========================================================================== */
+
+.auth-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 160px);
+  padding: 2.5rem 1rem;
+}
+
+.auth-card {
+  background: var(--clr-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neu-flat);
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 460px;
+  border: 1px solid var(--clr-border);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition);
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--clr-primary), #A855F7);
+}
+
+.auth-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.35rem;
+  color: var(--clr-text);
+  letter-spacing: -0.03em;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--clr-text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 2.25rem;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.75rem;
+  font-size: 0.925rem;
+  color: var(--clr-text-secondary);
+}
+
+.auth-switch a {
+  font-weight: 700;
+}

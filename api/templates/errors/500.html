@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Server Notice — Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 560px; margin: 4rem auto; text-align: center;">
+  <div class="card" style="padding: 2.5rem 2rem;">
+    <div style="display: inline-block; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.35rem 1rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1.25rem;">
+      HTTP 500 — Service Notice
+    </div>
+    <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.75rem;">Application Notice</h2>
+    <p style="color: var(--clr-text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.75rem;">
+      The system encountered a configuration or database initialization condition.
+      If this is a new cloud deployment, please ensure that <code>MONGO_URI</code> and <code>SECRET_KEY</code> are configured in your Vercel Project Settings and that MongoDB Atlas allows access from all IPs (<code>0.0.0.0/0</code>).
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary" style="padding: 0.65rem 1.5rem; text-decoration: none;">
+        Return to Login
+      </a>
+      <a href="javascript:location.reload()" class="btn btn-secondary" style="padding: 0.65rem 1.5rem; text-decoration: none;">
+        Retry Request
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

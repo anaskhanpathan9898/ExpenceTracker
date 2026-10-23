@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found — Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 520px; margin: 4rem auto; text-align: center;">
+  <div class="card" style="padding: 2.5rem 2rem;">
+    <div style="display: inline-block; background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); padding: 0.35rem 1rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1.25rem;">
+      HTTP 404 — Not Found
+    </div>
+    <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.75rem;">Page Not Found</h2>
+    <p style="color: var(--clr-text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.75rem;">
+      The page you were looking for doesn't exist or has been moved.
+    </p>
+    <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary" style="padding: 0.65rem 1.5rem; text-decoration: none;">
+      Back to Dashboard
+    </a>
+  </div>
+</div>
+{% endblock %}

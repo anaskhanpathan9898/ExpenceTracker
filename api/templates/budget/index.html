@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Budget — Expense Tracker{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+
+  <div class="page-header">
+    <h2>Monthly Budgets</h2>
+    <!-- Month selector -->
+    <form method="GET" action="{{ url_for('budget.index') }}" class="inline-form">
+      <input type="month" name="month" value="{{ selected_month }}"
+             onchange="this.form.submit()" class="month-picker" />
+    </form>
+  </div>
+
+  <!-- ========== SET BUDGET FORM ========== -->
+  <div class="form-card budget-form-card">
+    <h3>Set a Budget Limit</h3>
+    <form method="POST" action="{{ url_for('budget.set_budget_route') }}" class="budget-set-form">
+      <input type="hidden" name="month" value="{{ selected_month }}" />
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" name="category" required>
+            {% for cat in categories %}
+              <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="limit_amount">Limit (₹)</label>
+          <input type="number" id="limit_amount" name="limit_amount"
+                 placeholder="e.g. 5000"
+                 step="0.01" min="1" required />
+        </div>
+
+        <div class="form-group form-group-action">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn btn-primary">Save Budget</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ========== BUDGET PROGRESS BARS ========== -->
+  {% if budgets %}
+    <div class="budget-list">
+      {% for b in budgets %}
+      <div class="budget-item budget-{{ b.status }}">
+
+        <!-- Header row -->
+        <div class="budget-item-header">
+          <span class="budget-category">{{ b.category }}</span>
+          <span class="budget-amounts">
+            ₹{{ "%.2f" | format(b.spent) }} / ₹{{ "%.2f" | format(b.limit_amount) }}
+          </span>
+          <!-- Delete form -->
+          <form method="POST"
+                action="{{ url_for('budget.delete_budget_route', budget_id=b._id) }}"
+                style="display:inline;"
+                onsubmit="return confirm('Remove this budget limit?')">
+            <input type="hidden" name="month" value="{{ selected_month }}" />
+            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+          </form>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-bar-wrap">
+          <div class="progress-bar progress-{{ b.status }}"
+               style="width: {{ [b.percent, 100] | min }}%">
+          </div>
+        </div>
+
+        <!-- Status message -->
+        <div class="budget-status-msg">
+          {% if b.status == 'danger' %}
+            🚨 <strong>Over budget!</strong> You've exceeded your limit by
+            ₹{{ "%.2f" | format(b.spent - b.limit_amount) }}
+          {% elif b.status == 'warning' %}
+            ⚠️ <strong>Warning:</strong> {{ b.percent }}% of budget used
+          {% else %}
+            ✅ {{ b.percent }}% of budget used
+          {% endif %}
+        </div>
+
+      </div><!-- /budget-item -->
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p>🎯 No budgets set for {{ selected_month }}.</p>
+      <p>Use the form above to add your first budget limit.</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/budget.js') }}"></script>
+{% endblock %}

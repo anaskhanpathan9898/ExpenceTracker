@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Transactions — Expense Tracker{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/transactions.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+
+  <div class="page-header">
+    <h2>Transaction History</h2>
+    <a href="{{ url_for('transactions.add') }}" class="btn btn-primary">+ Add Transaction</a>
+  </div>
+
+  <!-- ========== FILTER / SEARCH BAR ========== -->
+  <form method="GET" action="{{ url_for('transactions.list_transactions') }}" class="filter-form">
+    <div class="filter-row">
+
+      <div class="filter-group">
+        <label>Search</label>
+        <input type="text" name="search"
+               placeholder="Search description…"
+               value="{{ filters.search }}" />
+      </div>
+
+      <div class="filter-group">
+        <label>Type</label>
+        <select name="type">
+          <option value="">All Types</option>
+          <option value="income"  {{ 'selected' if filters.type == 'income' }}>Income</option>
+          <option value="expense" {{ 'selected' if filters.type == 'expense' }}>Expense</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Category</label>
+        <select name="category">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+            <option value="{{ cat }}" {{ 'selected' if filters.category == cat }}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>From</label>
+        <input type="date" name="date_from"
+               value="{{ filters.date_from.strftime('%Y-%m-%d') if filters.date_from else '' }}" />
+      </div>
+
+      <div class="filter-group">
+        <label>To</label>
+        <input type="date" name="date_to"
+               value="{{ filters.date_to.strftime('%Y-%m-%d') if filters.date_to else '' }}" />
+      </div>
+
+      <div class="filter-actions">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-outline">Reset</a>
+      </div>
+
+    </div>
+  </form>
+
+  <!-- ========== RESULTS COUNT ========== -->
+  <p class="results-count">
+    Showing <strong>{{ transactions | length }}</strong> of <strong>{{ total_count }}</strong> transactions
+  </p>
+
+  <!-- ========== TRANSACTIONS TABLE ========== -->
+  {% if transactions %}
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Type</th>
+            <th class="text-right">Amount</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for txn in transactions %}
+          <tr>
+            <td>{{ txn.date.strftime("%d %b %Y") }}</td>
+            <td>{{ txn.description or "—" }}</td>
+            <td><span class="category-badge">{{ txn.category }}</span></td>
+            <td>
+              <span class="type-badge type-{{ txn.type }}">
+                {{ txn.type | capitalize }}
+              </span>
+            </td>
+            <td class="amount amount-{{ txn.type }} text-right">
+              {{ "+" if txn.type == "income" else "−" }}₹{{ "%.2f" | format(txn.amount) }}
+            </td>
+            <td class="text-center">
+              <a href="{{ url_for('transactions.edit', transaction_id=txn._id) }}"
+                 class="btn btn-sm btn-outline">Edit</a>
+
+              <!-- Delete uses a tiny form so we can POST (safer than GET) -->
+              <form method="POST"
+                    action="{{ url_for('transactions.delete', transaction_id=txn._id) }}"
+                    style="display:inline;"
+                    onsubmit="return confirm('Delete this transaction?')">
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== PAGINATION ========== -->
+    {% if total_pages > 1 %}
+    <div class="pagination">
+      {% if page > 1 %}
+        <a href="?{{ request.query_string.decode() | replace('page='~page, 'page='~(page-1)) }}"
+           class="btn btn-outline btn-sm">← Previous</a>
+      {% endif %}
+
+      <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
+
+      {% if page < total_pages %}
+        <a href="?{{ request.query_string.decode() | replace('page='~page, 'page='~(page+1)) }}"
+           class="btn btn-outline btn-sm">Next →</a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  {% else %}
+    <div class="empty-state">
+      <p>🔍 No transactions match your filters.</p>
+      <a href="{{ url_for('transactions.add') }}" class="btn btn-primary">Add a Transaction</a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/transactions.js') }}"></script>
+{% endblock %}

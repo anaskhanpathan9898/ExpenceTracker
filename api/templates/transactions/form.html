@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Transaction — Expense Tracker{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/transactions.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="page-container form-page">
+
+  <div class="page-header">
+    <h2>{{ action }} Transaction</h2>
+    <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-outline">← Back</a>
+  </div>
+
+  <div class="form-card">
+    <form method="POST"
+          action="{{ url_for('transactions.edit', transaction_id=transaction_id) if action == 'Edit' else url_for('transactions.add') }}"
+          novalidate>
+
+      <!-- Type -->
+      <div class="form-group">
+        <label>Transaction Type <span class="required">*</span></label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="type" value="income"
+                   {{ 'checked' if form_data.get('type') == 'income' }} required />
+            <span class="radio-btn income-radio">📈 Income</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="type" value="expense"
+                   {{ 'checked' if form_data.get('type') == 'expense' }} />
+            <span class="radio-btn expense-radio">📉 Expense</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Amount -->
+      <div class="form-group">
+        <label for="amount">Amount (₹) <span class="required">*</span></label>
+        <input type="number" id="amount" name="amount"
+               value="{{ form_data.get('amount', '') }}"
+               placeholder="0.00"
+               step="0.01" min="0.01"
+               required />
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category">Category <span class="required">*</span></label>
+        <select id="category" name="category" required>
+          <option value="" disabled {{ 'selected' if not form_data.get('category') }}>
+            Select a category
+          </option>
+          {% for cat in categories %}
+            <option value="{{ cat }}"
+                    {{ 'selected' if form_data.get('category') == cat }}>
+              {{ cat }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description"
+               value="{{ form_data.get('description', '') }}"
+               placeholder="Optional note (e.g. 'Lunch at cafe')"
+               maxlength="200" />
+      </div>
+
+      <!-- Date -->
+      <div class="form-group">
+        <label for="date">Date <span class="required">*</span></label>
+        <input type="date" id="date" name="date"
+               value="{{ form_data.get('date', '') }}"
+               required />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          {{ action }} Transaction
+        </button>
+        <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-outline">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/transactions.js') }}"></script>
+{% endblock %}
