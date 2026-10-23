@@ -8,6 +8,7 @@ function (create_app). This makes the app easier to test and avoids circular
 import problems between modules.
 """
 
+import os
 from flask import Flask, redirect, url_for
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
@@ -26,7 +27,11 @@ login_manager = LoginManager()
 def create_app():
     """Create, configure, and return the Flask application."""
 
-    app = Flask(__name__)
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    template_dir = os.path.join(base_dir, "templates")
+    static_dir = os.path.join(base_dir, "static")
+
+    app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
     app.config.from_object(Config)
 
     # -----------------------------------------------------------------------
@@ -89,9 +94,14 @@ def create_app():
 
 
 # ---------------------------------------------------------------------------
+# Module-level WSGI application instance (required for Vercel and WSGI servers)
+# ---------------------------------------------------------------------------
+app = create_app()
+
+
+# ---------------------------------------------------------------------------
 # Run the development server when this file is executed directly
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    app = create_app()
     # debug=True gives helpful error pages and auto-reloads on file changes
     app.run(debug=True, port=5000)

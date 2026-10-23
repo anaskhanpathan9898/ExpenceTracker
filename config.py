@@ -19,5 +19,12 @@ class Config:
     # MongoDB connection string
     MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/expense_tracker")
 
-    # Name of the MongoDB database parsed from the URI
-    MONGO_DBNAME = MONGO_URI.split("/")[-1].split("?")[0]
+    # Name of the MongoDB database parsed from the URI or fallback
+    MONGO_DBNAME = (
+        os.environ.get("MONGO_DBNAME")
+        or (
+            MONGO_URI.split("/")[-1].split("?")[0]
+            if ("/" in MONGO_URI and MONGO_URI.split("/")[-1].split("?")[0])
+            else "expense_tracker"
+        )
+    )

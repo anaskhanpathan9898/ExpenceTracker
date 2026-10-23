@@ -172,7 +172,7 @@ def run_browser_audit():
         page.fill("#amount", "420.00")
         page.select_option("#category", "Shopping")
         page.fill("#description", "Fintech UI Redesign Test")
-        page.fill("#date", "2026-10-23")
+        page.fill("#date", "2026-10-31")
         page.click("button[type='submit']")
         page.wait_for_load_state("networkidle")
 

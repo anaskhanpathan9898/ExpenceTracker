@@ -95,7 +95,7 @@ def get_transactions(db, user_id, filters=None, page=1, per_page=10):
     skip = (page - 1) * per_page
     docs = list(
         db.transactions.find(query)
-        .sort("date", -1)
+        .sort([("date", -1), ("_id", -1)])
         .skip(skip)
         .limit(per_page)
     )
@@ -117,7 +117,7 @@ def get_recent_transactions(db, user_id, limit=5):
     """Return the most recent `limit` transactions for the dashboard."""
     return list(
         db.transactions.find({"user_id": ObjectId(user_id)})
-        .sort("date", -1)
+        .sort([("date", -1), ("_id", -1)])
         .limit(limit)
     )
 

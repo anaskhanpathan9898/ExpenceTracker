@@ -105,6 +105,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -117,6 +118,7 @@ body {
   line-height: 1.5;
   transition: background-color var(--transition), color var(--transition);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
