@@ -6,42 +6,78 @@
   <title>{% block title %}Expense Tracker{% endblock %}</title>
   <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}" />
 
+  <!-- Google Fonts: Plus Jakarta Sans for modern fintech aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <!-- Base styles loaded on every page -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}" />
   {% block extra_css %}{% endblock %}
+  <!-- Responsive styles loaded AFTER page-specific styles so media queries override desktop rules -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}" />
+
+  <!-- Theme script in head to prevent FOUC (Flash of Unstyled Content) -->
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 
   <!-- Chart.js — only loaded on pages that need it -->
   {% block head_scripts %}{% endblock %}
 </head>
 <body>
 
-  <!-- ===================== NAVBAR ===================== -->
+  <!-- ===================== MODERN FINTECH NAVBAR ===================== -->
   <nav class="navbar">
     <div class="nav-brand">
-      <a href="{{ url_for('dashboard.index') }}">💰 ExpenseTracker</a>
+      <a href="{{ url_for('dashboard.index') }}">
+        <span class="brand-icon">💎</span>
+        <span>ExpenseTracker</span>
+        <span class="brand-badge">PRO</span>
+      </a>
     </div>
 
-    <!-- Hamburger button (visible only on mobile) -->
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-controls">
+      <ul class="nav-links" id="navLinks">
+        {% if current_user.is_authenticated %}
+          <li>
+            <a href="{{ url_for('dashboard.index') }}" class="{{ 'active' if request.endpoint == 'dashboard.index' }}">
+              📊 Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('transactions.list_transactions') }}" class="{{ 'active' if 'transactions' in request.endpoint }}">
+              💳 Transactions
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('budget.index') }}" class="{{ 'active' if 'budget' in request.endpoint }}">
+              🎯 Budget
+            </a>
+          </li>
+          <li class="nav-user">
+            <span>👤</span>
+            <span>{{ current_user.username }}</span>
+          </li>
+          <li>
+            <a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a>
+          </li>
+        {% else %}
+          <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+          <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+        {% endif %}
+      </ul>
 
-    <ul class="nav-links" id="navLinks">
-      {% if current_user.is_authenticated %}
-        <li><a href="{{ url_for('dashboard.index') }}"
-               class="{{ 'active' if request.endpoint == 'dashboard.index' }}">Dashboard</a></li>
-        <li><a href="{{ url_for('transactions.list_transactions') }}"
-               class="{{ 'active' if 'transactions' in request.endpoint }}">Transactions</a></li>
-        <li><a href="{{ url_for('budget.index') }}"
-               class="{{ 'active' if 'budget' in request.endpoint }}">Budget</a></li>
-        <li class="nav-user">👤 {{ current_user.username }}</li>
-        <li><a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a></li>
-      {% else %}
-        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-        <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-      {% endif %}
-    </ul>
+      <!-- Theme Toggle Button -->
+      <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle light/dark theme" title="Toggle theme">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+
+      <!-- Hamburger button (visible on mobile) -->
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
 
   <!-- ===================== FLASH MESSAGES ===================== -->
@@ -51,7 +87,7 @@
         {% for category, message in messages %}
           <div class="flash flash-{{ category }}">
             <span>{{ message }}</span>
-            <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+            <button class="flash-close" onclick="this.parentElement.remove()" aria-label="Dismiss notification">✕</button>
           </div>
         {% endfor %}
       {% endif %}
@@ -65,7 +101,7 @@
 
   <!-- ===================== FOOTER ===================== -->
   <footer class="footer">
-    <p>Expense Tracker &copy; 2026 — College Project</p>
+    <p>Expense Tracker SaaS &copy; 2026 — Modern Personal Finance System</p>
   </footer>
 
   <!-- Base JS: navbar toggle + auto-dismiss flash messages -->
@@ -73,17 +109,17 @@
     // Hamburger menu toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks  = document.getElementById('navLinks');
-    if (navToggle) {
+    if (navToggle && navLinks) {
       navToggle.addEventListener('click', () => {
         navLinks.classList.toggle('open');
         navToggle.classList.toggle('active');
       });
     }
 
-    // Auto-dismiss flash messages after 4 seconds
+    // Auto-dismiss flash messages after 4.5 seconds
     setTimeout(() => {
       document.querySelectorAll('.flash').forEach(el => el.remove());
-    }, 4000);
+    }, 4500);
   </script>
 
   {% block scripts %}{% endblock %}
