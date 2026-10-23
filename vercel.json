@@ -21,18 +21,6 @@
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/static/images/favicon.svg"
-    },
-    {
-      "src": "/favicon.svg",
-      "dest": "/static/images/favicon.svg"
-    },
-    {
       "src": "/(.*)",
       "dest": "/api/index.py"
     }

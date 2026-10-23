@@ -66,6 +66,18 @@ def create_app():
             jinja2.FileSystemLoader(d) for d in valid_template_dirs
         ])
 
+    # Multi-directory static file resolver for serverless environments
+    from flask import send_from_directory
+
+    def custom_static(filename):
+        for s_dir in valid_static_dirs:
+            file_path = os.path.join(s_dir, filename)
+            if os.path.isfile(file_path):
+                return send_from_directory(s_dir, filename)
+        return app.send_static_file(filename)
+
+    app.view_functions['static'] = custom_static
+
     # -----------------------------------------------------------------------
     # Initialise extensions with this app instance
     # -----------------------------------------------------------------------
