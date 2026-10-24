@@ -44,12 +44,12 @@
             </a>
           </li>
           <li>
-            <a href="{{ url_for('transactions.list_transactions') }}" class="{{ 'active' if 'transactions' in request.endpoint }}">
+            <a href="{{ url_for('transactions.list_transactions') }}" class="{{ 'active' if request.endpoint and 'transactions' in request.endpoint }}">
               💳 Transactions
             </a>
           </li>
           <li>
-            <a href="{{ url_for('budget.index') }}" class="{{ 'active' if 'budget' in request.endpoint }}">
+            <a href="{{ url_for('budget.index') }}" class="{{ 'active' if request.endpoint and 'budget' in request.endpoint }}">
               🎯 Budget
             </a>
           </li>
